@@ -12,6 +12,11 @@ use Intervention\Image\Actions\Orientate;
 
 class ProductsController extends Controller
 {
+    public function home(){
+        $products = Product::latest()->take(12)->get();
+        $categories = Product::select('category')->distinct()->pluck('category');
+        return view('welcome', compact('products','categories'));
+    }
     public function index(Request $request)
     {
         $q = $request->query('q');
