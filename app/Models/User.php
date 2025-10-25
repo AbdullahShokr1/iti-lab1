@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'profile_picture'
     ];
 
     /**
@@ -44,5 +45,15 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+    public function getProfilePictureUrlAttribute()
+    {
+        return $this->profile_picture
+            ? asset('storage/' . $this->profile_picture)
+            : asset('images/default-user.png');
+    }
+    public function products()
+    {
+        return $this->hasMany(\App\Models\Product::class, 'user_id');
     }
 }

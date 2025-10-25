@@ -11,8 +11,8 @@ class Product extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'name', 'description', 'price', 'category',
-        'image', 'stock_quantity', 'is_active'
+        'name', 'description', 'price',
+        'image', 'stock_quantity', 'is_active','category_id','user_id',
     ];
 
     public function getImageUrlAttribute()
@@ -20,4 +20,20 @@ class Product extends Model
         return $this->image ? Storage::disk('public')->url('products/'.$this->image) : null;
     }
     protected $appends = ['image_url'];
+
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function comments()
+    {
+        return $this->morphMany(Comment::class, 'commentable');
+    }
+    public function user()
+    {
+        return $this->belongsTo(\App\Models\User::class, 'user_id');
+    }
+    
 }

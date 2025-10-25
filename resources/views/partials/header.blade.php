@@ -19,10 +19,9 @@
 
 <!-- Categories (desktop) -->
 <nav class="hidden md:flex items-center gap-2 rtl:flex-row-reverse" aria-label="التصنيفات">
-<a href="#" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800">أجهزة</a>
-<a href="#" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800">ملابس</a>
-<a href="#" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800">أكسسوارات</a>
-<a href="#" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800">عروض</a>
+<a href="{{ route('products.index') }}" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800">المنتجات</a>
+<a href="{{ route('categories.index') }}" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800">الاقسام</a>
+
 </nav>
 </div>
 
@@ -56,14 +55,45 @@
 
 <!-- Account / Auth -->
 @guest
-<a href="{{ route('login') }}" class="hidden sm:inline-flex items-center px-3 py-2 rounded-md text-sm hover:bg-slate-100 dark:hover:bg-slate-800">تسجيل دخول</a>
+    <a href="{{ route('login') }}"
+       class="hidden sm:inline-flex items-center px-3 py-2 rounded-md text-sm hover:bg-slate-100 dark:hover:bg-slate-800">
+       تسجيل دخول
+    </a>
 @else
-<div class="relative">
-<button id="userMenuBtn" class="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800">
-<img src="{{ Auth::user()->avatar ?? '/images/avatar-placeholder.png' }}" alt="avatar" class="w-8 h-8 rounded-full object-cover" />
-<span class="text-sm">{{ Auth::user()->name }}</span>
-</button>
-<!-- dropdown (implement with Alpine/JS) -->
-</div>
+    <div x-data="{ open: false }" class="relative">
+        <!-- زر المستخدم -->
+        <button @click="open = !open"
+                @click.away="open = false"
+                class="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none">
+            <img src="{{ Auth::user()->profile_picture_url ?? '/images/avatar-placeholder.png' }}"
+                 alt="avatar"
+                 class="w-8 h-8 rounded-full object-cover">
+            <span class="text-sm">{{ Auth::user()->name }}</span>
+            <svg class="w-4 h-4 mt-[2px]" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M6 9l6 6 6-6"/>
+            </svg>
+        </button>
+
+        <!-- القائمة المنسدلة -->
+        <div x-show="open"
+             x-transition
+             class="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg shadow-lg overflow-hidden z-50">
+
+            <a href="{{ route('profile.edit') }}"
+               class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-slate-100 dark:hover:bg-slate-700">
+                الملف الشخصي
+            </a>
+
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit"
+                        class="w-full text-left block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-slate-100 dark:hover:bg-slate-700">
+                    تسجيل الخروج
+                </button>
+            </form>
+        </div>
+    </div>
 @endguest
+
 </header>

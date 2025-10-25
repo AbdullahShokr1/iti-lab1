@@ -54,17 +54,19 @@
 
     <div>
       <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">الفئة</label>
-      <select name="category"
-              class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+        <select name="category_id"
+                required
+                class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+        <option value="">اختر الفئة</option>
         @foreach($categories as $c)
-          <option value="{{ $c }}" @if(old('category', $product->category ?? '')==$c) selected @endif>
-            {{ $c }}
-          </option>
+            <option value="{{ $c->id }}" @selected(old('category_id', $product->category_id ?? '') == $c->id)>
+            {{ $c->name }}
+            </option>
         @endforeach
-      </select>
-      @error('category')
+        </select>
+        @error('category_id')
         <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
-      @enderror
+        @enderror
     </div>
 
     <div>
@@ -116,6 +118,8 @@
       <span class="text-sm text-gray-700 dark:text-gray-300">نشط</span>
     </label>
   </div>
+
+
 
   {{-- زر الحفظ --}}
   <div class="pt-4 text-center">

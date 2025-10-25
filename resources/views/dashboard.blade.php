@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-app>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
             {{ __('Dashboard') }}
@@ -14,4 +14,13 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+    <form method="POST" action="{{ route('logout') }}">
+        @csrf
+
+        <x-dropdown-link :href="route('logout')"
+                onclick="event.preventDefault();
+                            this.closest('form').submit();">
+            {{ __('Log Out') }}
+        </x-dropdown-link>
+    </form>
+</x-app>

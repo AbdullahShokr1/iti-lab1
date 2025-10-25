@@ -1,4 +1,31 @@
 <x-app>
+    @if (session('success') || session('error'))
+    <div
+        x-data="{ show: true }"
+        x-init="setTimeout(() => show = false, 3000)"
+        x-show="show"
+        x-transition
+        class="fixed top-6 right-6 z-50 max-w-sm w-full">
+
+        <div class="flex items-center gap-3 px-5 py-4 rounded-xl shadow-lg
+                    {{ session('success') ? 'bg-green-600 text-white' : 'bg-red-600 text-white' }}
+                    transition duration-300 ease-in-out transform hover:scale-105">
+
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                 stroke-width="1.8" stroke="currentColor" class="w-6 h-6">
+                @if(session('success'))
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                @else
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                @endif
+            </svg>
+
+            <span class="font-medium text-sm leading-tight">
+                {{ session('success') ?? session('error') }}
+            </span>
+        </div>
+    </div>
+@endif
     <div dir="rtl" class="font-[Tajawal] text-gray-800 dark:text-gray-100">
 
         {{-- ✅ Container عام --}}
@@ -13,15 +40,19 @@
                                bg-gray-50 dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500
                                text-sm transition" />
 
-                    <select name="category"
+                    <select name="category_id"
                         class="px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700
-                               bg-gray-50 dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-                               text-sm transition">
-                        <option value="">كل الفئات</option>
-                        @foreach($categories as $c)
-                            <option value="{{ $c }}" @if(request('category')==$c) selected @endif>{{ $c }}</option>
-                        @endforeach
-                    </select>
+                            bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-gray-100
+                            focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm transition w-full sm:w-auto">
+                    <option value="">كل الفئات</option>
+                    @foreach($categories as $category)
+                        <option value="{{ $category->id }}"
+                            @if(request('category_id') == $category->id) selected @endif>
+                            {{ $category->name }}
+                        </option>
+                    @endforeach
+                </select>
+
 
                     <button type="submit"
                         class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition flex items-center gap-1">
@@ -71,7 +102,7 @@
                                         ${{ number_format($product->price, 2) }}
                                     </span>
                                     <div class="text-xs text-gray-500 dark:text-gray-400">
-                                        {{ $product->category }}
+                                        {{ $product->category->name ?? 'بدون تصنيف' }}
                                     </div>
                                 </div>
 
@@ -100,4 +131,5 @@
             @endif
         </div>
     </div>
+
 </x-app>
