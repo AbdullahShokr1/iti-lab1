@@ -24,9 +24,8 @@ class CommentController extends Controller
             'author_email' => Auth::check() ? Auth::user()->email : 'guest@example.com',
         ]);
 
-        // ربط التعليق بالمنتج (polymorphic)
         $product->comments()->save($comment);
 
-        return redirect()->back()->with('success', 'تم إضافة تعليقك بنجاح ✅');
+        return redirect()->back()->with('success', 'تم إضافة تعليقك بنجاح ');
     }
 }

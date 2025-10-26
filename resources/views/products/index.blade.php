@@ -59,10 +59,20 @@
                          <span>بحث</span>
                     </button>
                 </form>
-                <a href="{{ route('products.create') }}"
-                    class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition flex items-center gap-1">
-                     <span>اضافة منتج</span>
-                </a>
+                <div class="flex flex-wrap gap-3">
+
+                    <a href="{{ route('products.create') }}"
+                        class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition flex items-center gap-1">
+                        <span> إضافة منتج</span>
+                    </a>
+
+                    <x-button
+                        type="danger"
+                        :href="route('products.trashed')"
+                        :text="' سلة المحذوفات (' . $trashedCount . ')'"
+                    />
+
+                </div>
             </div>
 
 
@@ -74,11 +84,13 @@
                         {{-- صورة المنتج --}}
                         <div class="relative h-56 bg-gray-100 dark:bg-gray-800 flex items-center justify-center overflow-hidden">
                             @if($product->image_url)
-                                <img src="{{ $product->image_url }}" alt="{{ $product->name }}"
+                                <img src="{{ $product->image_url ?: asset('images/default-product.png') }}" alt="{{ $product->name }}"
                                     class="object-cover w-full h-full transform group-hover:scale-105 transition duration-500 ease-in-out"
                                     loading="lazy">
                             @else
-                                <div class="text-sm text-gray-400">لا توجد صورة</div>
+                                <img src="{{ asset('images/default-product.png') }}" alt="{{ $product->name }}"
+                                    class="object-cover w-full h-full transform group-hover:scale-105 transition duration-500 ease-in-out"
+                                    loading="lazy">
                             @endif
                             @if(!$product->is_active)
                                 <span class="absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-1 rounded-full shadow">

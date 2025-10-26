@@ -19,9 +19,9 @@ class ProductFactory extends Factory
             'description' => $this->faker->optional(0.2)->paragraphs(rand(1,3), true),
             'price' => $this->faker->randomFloat(2, 10, 999.99),
             'category' => $category,
-            'image' => null, 
+            'image' => null,
             'stock_quantity' => $this->faker->numberBetween(0, 100),
-            'is_active' => $this->faker->boolean(85), 
+            'is_active' => $this->faker->boolean(85),
         ];
     }
 

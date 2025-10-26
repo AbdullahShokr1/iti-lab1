@@ -12,8 +12,6 @@
 
         <div class="mt-4 flex items-center gap-3">
           <!-- social icons -->
-          <a href="#" class="p-2 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 2h4v4"></path></svg></a>
-          <a href="#" class="p-2 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M22 12a10 10 0 11-20 0 10 10 0 0120 0z"></path></svg></a>
         </div>
       </div>
 
@@ -43,9 +41,9 @@
       <div>
         <h4 class="font-semibold mb-3">طرق الدفع & تواصل</h4>
         <div class="flex gap-2 items-center mb-3">
-          <img src="/images/pay-visa.svg" alt="visa" class="h-8" />
-          <img src="/images/pay-master.svg" alt="master" class="h-8" />
-          <img src="/images/pay-apple.svg" alt="apple" class="h-8" />
+          <img src="/images/pay-visa.png" alt="visa" class="h-8" />
+          <img src="/images/pay-master.png" alt="master" class="h-8" />
+          <img src="/images/pay-apple.png" alt="apple" class="h-8" />
         </div>
         <p class="text-sm">هاتف: <a href="tel:+201234567890" class="hover:underline">+20 123 456 7890</a></p>
         <p class="text-sm">بريد: <a href="mailto:info@store.com" class="hover:underline">info@store.com</a></p>
@@ -63,68 +61,43 @@
 </footer>
 
 
-<!-- Simple JS to handle dark mode, mobile menu and cart drawer -->
 <script>
-  // Dark mode toggle (RTL-friendly) - call this in your Blade layout before </body>
-  (function(){
+  (function () {
     const html = document.documentElement;
-    const toggle = document.getElementById('darkToggle');
-    const moon = document.getElementById('moonIcon');
-    const sun = document.getElementById('sunIcon');
+    // const toggle = document.getElementById('darkToggle');
+    // const moon = document.getElementById('moonIcon');
+    // const sun = document.getElementById('sunIcon');
 
-    function setDark(isDark){
-      if(isDark){
-        html.classList.add('dark');
-        localStorage.setItem('theme','dark');
-        moon.classList.remove('hidden'); sun.classList.add('hidden');
-        toggle.setAttribute('aria-pressed','true');
-      } else {
-        html.classList.remove('dark');
-        localStorage.setItem('theme','light');
-        sun.classList.remove('hidden'); moon.classList.add('hidden');
-        toggle.setAttribute('aria-pressed','false');
-      }
-    }
 
-    // init theme
-    const stored = localStorage.getItem('theme');
-    if(stored) setDark(stored === 'dark');
-    else setDark(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
-
-    if(toggle){
-      toggle.addEventListener('click', ()=> setDark(!document.documentElement.classList.contains('dark')));
-    }
-
-    // Mobile menu
     const mobileBtn = document.getElementById('mobileMenuBtn');
     const mobileMenu = document.getElementById('mobileMenu');
-    if(mobileBtn && mobileMenu){
-      mobileBtn.addEventListener('click', ()=> mobileMenu.classList.toggle('hidden'));
+    if (mobileBtn && mobileMenu) {
+      mobileBtn.addEventListener('click', () =>
+        mobileMenu.classList.toggle('hidden')
+      );
     }
 
-    // Cart drawer
     const cartBtn = document.getElementById('cartBtn');
     const cartDrawer = document.getElementById('cartDrawer');
     const cartBackdrop = document.getElementById('cartBackdrop');
     const closeCart = document.getElementById('closeCart');
-    function openCart(){
-      cartDrawer.querySelector('aside').classList.remove('translate-x-full');
-      cartBackdrop.classList.add('opacity-100');
-    }
-    function hideCart(){
-      cartDrawer.querySelector('aside').classList.add('translate-x-full');
-      cartBackdrop.classList.remove('opacity-100');
-    }
-    if(cartBtn){ cartBtn.addEventListener('click', openCart); }
-    if(closeCart){ closeCart.addEventListener('click', hideCart); }
-    if(cartBackdrop){ cartBackdrop.addEventListener('click', hideCart); }
 
+    function openCart() {
+      if (cartDrawer && cartDrawer.querySelector('aside')) {
+        cartDrawer.querySelector('aside').classList.remove('translate-x-full');
+      }
+      if (cartBackdrop) cartBackdrop.classList.add('opacity-100');
+    }
+
+    function hideCart() {
+      if (cartDrawer && cartDrawer.querySelector('aside')) {
+        cartDrawer.querySelector('aside').classList.add('translate-x-full');
+      }
+      if (cartBackdrop) cartBackdrop.classList.remove('opacity-100');
+    }
+
+    if (cartBtn) cartBtn.addEventListener('click', openCart);
+    if (closeCart) closeCart.addEventListener('click', hideCart);
+    if (cartBackdrop) cartBackdrop.addEventListener('click', hideCart);
   })();
 </script>
-
-<!-- Notes:
- - Replace image paths with your assets.
- - Add Tailwind "primary" color via theme (e.g., --tw-prose-invert or custom color class .bg-primary in tailwind.config.js)
- - For accessibility & better interactivity, integrate Alpine.js or small Vue components for dropdowns and dynamic cart content.
- - To support RTL properly, ensure html dir="rtl" or use conditional direction based on locale: <html dir="rtl"> for Arabic.
--->

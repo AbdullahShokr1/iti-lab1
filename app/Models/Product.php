@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
     protected $fillable = [
         'name', 'description', 'price',
         'image', 'stock_quantity', 'is_active','category_id','user_id',
@@ -35,5 +35,5 @@ class Product extends Model
     {
         return $this->belongsTo(\App\Models\User::class, 'user_id');
     }
-    
+
 }

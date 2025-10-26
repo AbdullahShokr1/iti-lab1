@@ -13,13 +13,16 @@ use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Imagick\Driver;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class ProductsController extends Controller implements  HasMiddleware
 {
+    use AuthorizesRequests;
     public static function middleware(): array
     {
         return [
             new Middleware('product.limit', only: ['store']),
+            new Middleware('role:Admin', only: ['create']),
         ];
     }
     public function home()
@@ -55,8 +58,9 @@ class ProductsController extends Controller implements  HasMiddleware
         $categories = Category::where('is_active', true)
             ->whereHas('products', fn($q) => $q->where('is_active', true))
             ->get();
+        $trashedCount = Product::onlyTrashed()->count();
 
-        return view('products.index', compact('products', 'categories', 'q', 'categoryId'));
+        return view('products.index', compact('products', 'categories', 'q', 'categoryId', 'trashedCount'));
     }
 
     public function create()
@@ -115,13 +119,39 @@ class ProductsController extends Controller implements  HasMiddleware
 
     public function destroy(Product $product)
     {
+        $this->authorize('delete', $product);
+        $product->delete();
+
+        return redirect()->route('products.index')->with('success', 'تم حذف المنتج بنجاح (قابل للاسترجاع).');
+    }
+    public function forceDelete($id)
+    {
+
+        $product = Product::withTrashed()->findOrFail($id);
+        $this->authorize('forceDelete', $product);
+
         if ($product->image && Storage::disk('public')->exists("products/{$product->image}")) {
             Storage::disk('public')->delete("products/{$product->image}");
         }
 
-        $product->delete();
+        $product->forceDelete();
 
-        return redirect()->route('products.index')->with('success', 'تم حذف المنتج بنجاح');
+        return redirect()->route('products.trashed')->with('success', 'تم حذف المنتج نهائياً.');
+    }
+    public function trashed()
+    {
+        $trashedProducts = Product::onlyTrashed()->with('category')->paginate(20);
+        return view('products.trashed', compact('trashedProducts'));
+    }
+
+    public function restore($id)
+    {
+
+        $product = Product::onlyTrashed()->findOrFail($id);
+        $this->authorize('restore', $product);
+        $product->restore();
+
+        return redirect()->route('products.trashed')->with('success', 'تم استرجاع المنتج بنجاح.');
     }
 
     private function processImage($file)

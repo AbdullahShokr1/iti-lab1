@@ -24,13 +24,27 @@
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
-        <!-- Remember Me -->
-        <div class="block mt-4">
+        <!-- Remember Me + Register Link -->
+        <div class="flex items-center justify-between mt-4">
             <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800" name="remember">
-                <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Remember me') }}</span>
+                <input id="remember_me" type="checkbox"
+                       class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-indigo-600 shadow-sm
+                              focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800"
+                       name="remember">
+                <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">
+                    {{ __('Remember me') }}
+                </span>
             </label>
+
+            <!-- Register Link -->
+            @if (Route::has('register'))
+                <a href="{{ route('register') }}"
+                   class="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 transition">
+                    {{ __('Create new account') }}
+                </a>
+            @endif
         </div>
+
 
         <div class="flex items-center justify-end mt-4">
             @if (Route::has('password.request'))
@@ -38,6 +52,7 @@
                     {{ __('Forgot your password?') }}
                 </a>
             @endif
+
 
             <x-primary-button class="ms-3">
                 {{ __('Log in') }}

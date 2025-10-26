@@ -18,9 +18,15 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 Route::middleware(['auth'])->group(function () {
+    Route::get('/products/trashed', [ProductsController::class, 'trashed'])->name('products.trashed');
     Route::resource('products', ProductsController::class);
+    Route::get('/categories/trashed', [CategoryController::class, 'trashed'])->name('categories.trashed');
     Route::resource('categories', CategoryController::class);
     Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
+    Route::post('/products/{id}/restore', [ProductsController::class, 'restore'])->name('products.restore');
+    Route::delete('/products/{id}/force-delete', [ProductsController::class, 'forceDelete'])->name('products.forceDelete');
+    Route::post('/categories/{id}/restore', [CategoryController::class, 'restore'])->name('categories.restore');
+    Route::delete('/categories/{id}/force-delete', [CategoryController::class, 'forceDelete'])->name('categories.forceDelete');
 });
 
 

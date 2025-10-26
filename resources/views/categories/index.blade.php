@@ -3,10 +3,18 @@
         {{-- Header --}}
         <div class="flex justify-between items-center mb-8">
             <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100">الاقسام</h1>
-            <a href="{{ route('categories.create') }}"
-               class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow transition duration-200">
-                 انشاء تصنيف جديد
-            </a>
+
+            <div class="flex gap-3">
+                <a href="{{ route('categories.create') }}"
+                class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow transition duration-200">
+                    انشاء تصنيف جديد
+                </a>
+                <x-button
+                    type="danger"
+                    :href="route('categories.trashed')"
+                    :text="' سلة المحذوفات (' . $trashedCount . ')'"
+                />
+            </div>
         </div>
 
         {{-- Search Form --}}

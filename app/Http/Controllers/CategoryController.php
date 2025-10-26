@@ -7,9 +7,11 @@ use App\Http\Requests\CategoryUpdateRequest;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class CategoryController extends Controller
 {
+    use AuthorizesRequests;
     public function index(Request $request)
     {
         $q = $request->query('q');
@@ -22,8 +24,9 @@ class CategoryController extends Controller
         }
 
         $categories = $query->paginate(12)->withQueryString();
+        $trashedCount = Category::onlyTrashed()->count();
 
-        return view('categories.index', compact('categories', 'q'));
+        return view('categories.index', compact('categories', 'q','trashedCount'));
     }
 
     public function create()
@@ -80,12 +83,40 @@ class CategoryController extends Controller
 
     public function destroy(Category $category)
     {
-        if ($category->image && Storage::disk('public')->exists($category->image)) {
-            Storage::disk('public')->delete($category->image);
-        }
-
+        $this->authorize('delete', $category);
         $category->delete();
 
         return redirect()->route('categories.index')->with('success', 'Category deleted.');
+    }
+
+    public function trashed()
+    {
+        $trashedCategories = Category::onlyTrashed()->paginate(20);
+        return view('categories.trashed', compact('trashedCategories'));
+    }
+
+    public function restore($id)
+    {
+
+        $category = Category::onlyTrashed()->findOrFail($id);
+        $this->authorize('restore', $category);
+        $category->restore();
+
+        return redirect()->route('categories.trashed')->with('success', 'تم استرجاع القسم بنجاح.');
+    }
+
+    public function forceDelete($id)
+    {
+
+        $category = Category::withTrashed()->findOrFail($id);
+        $this->authorize('forceDelete', $category);
+
+        if ($category->image && Storage::disk('public')->exists("categories/{$category->image}")) {
+            Storage::disk('public')->delete("categories/{$category->image}");
+        }
+
+        $category->forceDelete();
+
+        return redirect()->route('categories.trashed')->with('success', 'تم حذف القسم نهائيًا.');
     }
 }

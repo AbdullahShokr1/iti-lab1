@@ -21,7 +21,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'profile_picture'
+        'profile_picture',
+        'role',
     ];
 
     /**
@@ -56,4 +57,6 @@ class User extends Authenticatable
     {
         return $this->hasMany(\App\Models\Product::class, 'user_id');
     }
+    public const ROLES = ['Admin', 'Manager', 'Client'];
+
 }
